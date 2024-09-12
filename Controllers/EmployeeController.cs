@@ -14,20 +14,20 @@ namespace EmployeeManagementSystem.Controllers
     //[Authorize]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeService employeeService;
+        private readonly IEmployeeService _employeeService;
         private readonly IUserService _userService;
 
 
-        public EmployeeController(IEmployeeService employeeRepository, IUserService userService)
+        public EmployeeController(IEmployeeService employeeService, IUserService userService)
         {
-            employeeService = employeeRepository;
+            _employeeService = employeeService;
             _userService = userService;
         }
 
         [HttpPost("SaveEmployeeDetails")]
         public async Task<IActionResult> SaveEmployeeDetails(EmployeeDTO employeeDto)
         {
-            var employee = await employeeService.SaveEmployee(employeeDto);
+            var employee = await _employeeService.SaveEmployee(employeeDto);
             if (employee.IsSuccess)
             {
                 return Ok(employeeDto);
@@ -41,7 +41,7 @@ namespace EmployeeManagementSystem.Controllers
        [Authorize]
         public async Task<IActionResult> GetEmployeeList(PaginationModel paginationModel)
         {
-            //var employeeList = await employeeService.GetListOfEmployee();
+            //var employeeList = await _employeeService.GetListOfEmployee();
             //if (employeeList.IsSuccess)
             //{
             //    return Ok(employeeList);
@@ -56,7 +56,7 @@ namespace EmployeeManagementSystem.Controllers
             }
             else
             {
-                var employeeList = await employeeService.GetListOfEmployee(paginationModel);
+                var employeeList = await _employeeService.GetListOfEmployee(paginationModel);
                 return Ok(employeeList);
             }
         }
@@ -64,7 +64,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpGet("GetEmployee/{id}")]
         public async Task<IActionResult> GetEmployee(String id)
         {
-            var employee = await employeeService.GetEmployee(id);
+            var employee = await _employeeService.GetEmployee(id);
             if (employee == null)
             {
                 return NotFound();
@@ -76,7 +76,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpPut("UpdateEmployee/{id}")]
         public async Task<IActionResult> UpdateEmployee(String id, EmployeeUpdateDto employee)
         {
-            var existingEmployee = await employeeService.UpdateEmployee(employee, id);
+            var existingEmployee = await _employeeService.UpdateEmployee(employee, id);
             if (existingEmployee.IsSuccess)
             {
                 return Ok(existingEmployee);
@@ -87,7 +87,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpDelete("DeleteEmployee/{id}")]
         public async Task<IActionResult> DeleteEmployee(String id)
         {
-            var employee = await employeeService.DeleteEmployee(id);
+            var employee = await _employeeService.DeleteEmployee(id);
             if (employee.IsSuccess)
             {
                 return Ok(employee);
@@ -99,7 +99,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpGet("SearchEmployeeByFirstName")]
         public async Task<IActionResult> SearchEmployeeByFirstName( string firstName)
         {
-            var employee = await employeeService.SearchEmployeesByFirstName(firstName);
+            var employee = await _employeeService.SearchEmployeesByFirstName(firstName);
             if (employee.IsSuccess)
             {
                 return Ok(employee);
@@ -110,7 +110,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpGet("GroupBySalary")]
         public async Task<IActionResult> GroupBySalary()
         {
-            var employee = await employeeService.GroupBySalary();
+            var employee = await _employeeService.GroupBySalary();
             if (employee.IsSuccess)
             {
                 return Ok(employee);
